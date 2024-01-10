@@ -1,8 +1,8 @@
 {
-  "name": "@konker.dev/node-ts-fp-boilerplate",
-  "version": "0.0.2",
+  "name": "@konker.dev/tiny-filesystem-fp",
+  "version": "0.0.1",
   "author": "Konrad Markus <mail@konker.dev>",
-  "description": "Boilerplate for Node.js TypeScript projects based on Effect-ts",
+  "description": "A minimal filesystem abstraction for Node.js and AWS S3, based on Effect-TS",
   "license": "ISC",
   "main": "dist/index.js",
   "files": [
@@ -11,11 +11,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/konkerdotdev/node-ts-fp-boilerplate"
+    "url": "https://github.com/konkerdotdev/tiny-filesystem-fp"
   },
   "keywords": [
     "node",
-    "boilerplate",
+    "filesystem",
+    "aws",
+    "S3",
     "typescript",
     "functional-programming",
     "effect-ts"
