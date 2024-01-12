@@ -161,3 +161,7 @@ export type TinyFileSystem = {
 export type TinyFileSystemAppendable = TinyFileSystem & {
   readonly getFileAppendWriteStream: (filePath: string) => P.Effect.Effect<never, TinyFileSystemError, Writable>;
 };
+
+export { NodeTinyFileSystem } from './node';
+export { S3TinyFileSystem } from './s3';
+export * from './lib/error';
