@@ -1,6 +1,6 @@
 {
   "name": "@konker.dev/tiny-filesystem-fp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Konrad Markus <mail@konker.dev>",
   "description": "A minimal filesystem abstraction for Node.js and AWS S3, based on Effect-TS",
   "license": "ISC",
@@ -27,12 +27,12 @@
     "@effect/data": "^0.18.5",
     "@effect/io": "^0.40.3",
     "@effect/schema": "^0.36.5",
-    "@konker.dev/aws-client-effect-s3": "^0.0.4",
     "@konker.dev/effect-ts-prelude": "latest",
     "effect": "^2.0.2"
   },
   "peerDependencies": {
-    "@aws-sdk/client-s3": "^3.450.0"
+    "@aws-sdk/client-s3": "^3.450.0",
+    "@konker.dev/aws-client-effect-s3": "^0.0.4"
   },
   "devDependencies": {
     "@effect/language-service": "^0.0.21",
