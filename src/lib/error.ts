@@ -1,15 +1,7 @@
-export const TAG = 'TinyFileSystemError';
+import { toTinyError } from '@konker.dev/tiny-error-fp';
 
-export type TinyFileSystemError = {
-  readonly _tag: typeof TAG;
-  readonly message: string;
-  readonly cause: unknown;
-};
+export const ERROR_TAG = 'TinyFileSystemError';
+export type ERROR_TAG = typeof ERROR_TAG;
 
-export function toTinyFileSystemError(x: unknown): TinyFileSystemError {
-  return {
-    _tag: TAG,
-    message: typeof x === 'object' && x && 'message' in x ? (x as any).message : String(x),
-    cause: x,
-  };
-}
+export const toTinyFileSystemError = toTinyError<ERROR_TAG>(ERROR_TAG);
+export type TinyFileSystemError = ReturnType<typeof toTinyFileSystemError>;
