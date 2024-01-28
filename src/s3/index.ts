@@ -32,10 +32,11 @@ const getFileReadStream =
           Key: parsed.FullPath,
         })
       ),
+      (x) => x,
       P.Effect.filterOrFail(s3ObjectIsReadable, () =>
         toTinyFileSystemError('[S3TinyFileSystem] getFileReadStream: Body is not a Readable')
       ),
-      P.Effect.map((s3File) => s3File.Body),
+      P.Effect.map((s3File) => s3File.Body as Readable),
       P.Effect.mapError(toTinyFileSystemError),
       P.Effect.provideService(S3ClientDeps, S3ClientDeps.of({ s3Client }))
     );
@@ -175,7 +176,7 @@ const readFile =
           `[S3TinyFileSystem] S3 object does not have a readable stream Body: ${JSON.stringify(resp)}`
         )
       ),
-      P.Effect.flatMap((resp) => readStreamToBuffer(resp.Body)),
+      P.Effect.flatMap((resp) => readStreamToBuffer(resp.Body as Readable)),
       P.Effect.mapError(toTinyFileSystemError),
       P.Effect.provideService(S3ClientDeps, S3ClientDeps.of({ s3Client }))
     );
