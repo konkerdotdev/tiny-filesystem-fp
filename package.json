@@ -1,6 +1,6 @@
 {
   "name": "@konker.dev/tiny-filesystem-fp",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Konrad Markus <mail@konker.dev>",
   "description": "A minimal filesystem abstraction for Node.js and AWS S3, based on Effect-TS",
   "license": "ISC",
