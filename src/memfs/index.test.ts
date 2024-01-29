@@ -6,6 +6,7 @@ import { PassThrough, Readable, Writable } from 'stream';
 
 import type { DirectoryPath } from '../index';
 import { FileType } from '../index';
+import * as memFs1Fixture from '../test/fixtures/memfs-1.json';
 import * as unit from './index';
 
 describe('MemFsTinyFileSystem', () => {
@@ -13,7 +14,7 @@ describe('MemFsTinyFileSystem', () => {
 
   beforeAll(() => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    memFsTinyFileSystem = unit.MemFsTinyFileSystem({ './foo/bar.txt': 'BAR' }, '/tmp');
+    memFsTinyFileSystem = unit.MemFsTinyFileSystem(memFs1Fixture, '/tmp');
   });
 
   describe('default init params', () => {
@@ -122,6 +123,30 @@ describe('MemFsTinyFileSystem', () => {
       const files = await P.Effect.runPromise(memFsTinyFileSystem.listFiles('/foo/bar'));
       expect(stub1).toHaveBeenCalledTimes(1);
       expect(files[0]).toBe('/foo/bar/test-file.txt');
+    });
+  });
+
+  describe('glob', () => {
+    it('should function correctly', async () => {
+      const files = await P.Effect.runPromise(memFsTinyFileSystem.glob('/tmp/**/*.txt'));
+      expect(files).toStrictEqual(['/tmp/foo/a.txt', '/tmp/foo/b.txt', '/tmp/foo/bar/e.txt']);
+    });
+
+    it('should function correctly', async () => {
+      const files = await P.Effect.runPromise(memFsTinyFileSystem.glob('/tmp/**/*'));
+      expect(files).toStrictEqual([
+        '/tmp/foo/a.txt',
+        '/tmp/foo/b.txt',
+        '/tmp/foo/c.csv',
+        '/tmp/foo/d.json',
+        '/tmp/foo/bar/e.txt',
+        '/tmp/foo/bar/f.log',
+      ]);
+    });
+
+    it('should function correctly', async () => {
+      const files = await P.Effect.runPromise(memFsTinyFileSystem.glob('/tmp/foo/*.txt'));
+      expect(files).toStrictEqual(['/tmp/foo/a.txt', '/tmp/foo/b.txt']);
     });
   });
 

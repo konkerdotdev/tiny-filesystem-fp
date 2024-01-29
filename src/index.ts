@@ -158,8 +158,12 @@ export type TinyFileSystem = {
   extname: (filePath: string) => string;
 };
 
-export type TinyFileSystemAppendable = TinyFileSystem & {
+export type TinyFileSystemAppendable<T extends TinyFileSystem = TinyFileSystem> = T & {
   readonly getFileAppendWriteStream: (filePath: string) => P.Effect.Effect<never, TinyFileSystemError, Writable>;
+};
+
+export type TinyFileSystemWithGlob<T extends TinyFileSystem = TinyFileSystem> = T & {
+  readonly glob: (dirPath: string) => P.Effect.Effect<never, TinyFileSystemError, Array<Ref>>;
 };
 
 export { MemFsTinyFileSystem } from './memfs';
