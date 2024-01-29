@@ -61,7 +61,7 @@ function listFiles(dirPath: string): P.Effect.Effect<never, TinyFileSystemError,
 function glob(globPattern: string): P.Effect.Effect<never, TinyFileSystemError, Array<Ref>> {
   return P.Effect.tryPromise({
     try: async () => {
-      const files = await fg.async(globPattern, { fs: fs as any });
+      const files = await fg.async(globPattern, { fs: fs as fg.FileSystemAdapter });
       return files.map((file) => String(file) as Path);
     },
     catch: toTinyFileSystemError,
