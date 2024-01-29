@@ -1,5 +1,6 @@
 /* eslint-disable fp/no-let,fp/no-mutation */
 import * as P from '@konker.dev/effect-ts-prelude';
+import fg from 'fast-glob';
 import fs from 'fs';
 import readline from 'readline';
 import { PassThrough, Readable, Writable } from 'stream';
@@ -108,6 +109,22 @@ describe('NodeTinyFileSystem', () => {
       const files = await P.Effect.runPromise(unit.listFiles('/foo/bar'));
       expect(stub1).toHaveBeenCalledTimes(1);
       expect(files[0]).toBe('/foo/bar/test-file.txt');
+    });
+  });
+
+  describe('glob', () => {
+    let stub1: jest.SpyInstance;
+    beforeEach(() => {
+      stub1 = jest.spyOn(fg, 'async').mockReturnValue(['/foo/bar/test-file.txt'] as any);
+    });
+    afterEach(() => {
+      stub1.mockClear();
+    });
+
+    it('should function correctly', async () => {
+      const files = await P.Effect.runPromise(unit.glob('./foo/bar'));
+      expect(stub1).toHaveBeenCalledTimes(1);
+      expect(files).toStrictEqual(['/foo/bar/test-file.txt']);
     });
   });
 

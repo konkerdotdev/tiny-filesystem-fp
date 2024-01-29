@@ -4,8 +4,9 @@ import readline from 'node:readline';
 import type { Readable, Writable } from 'node:stream';
 
 import * as P from '@konker.dev/effect-ts-prelude';
+import * as fg from 'fast-glob';
 
-import type { DirectoryPath, FileName, Path, Ref, TinyFileSystemAppendable } from '../index';
+import type { DirectoryPath, FileName, Path, Ref, TinyFileSystemAppendable, TinyFileSystemWithGlob } from '../index';
 import { FileType, fileTypeIsFile } from '../index';
 import type { TinyFileSystemError } from '../lib/error';
 import { toTinyFileSystemError } from '../lib/error';
@@ -52,6 +53,16 @@ function listFiles(dirPath: string): P.Effect.Effect<never, TinyFileSystemError,
     try: async () => {
       const files = await fs.promises.readdir(dirPath);
       return files.map((file) => path.join(dirPath, file) as Path);
+    },
+    catch: toTinyFileSystemError,
+  });
+}
+
+function glob(globPattern: string): P.Effect.Effect<never, TinyFileSystemError, Array<Ref>> {
+  return P.Effect.tryPromise({
+    try: async () => {
+      const files = await fg.async(globPattern, { fs });
+      return files.map((file) => String(file) as Path);
     },
     catch: toTinyFileSystemError,
   });
@@ -147,7 +158,7 @@ function extname(filePath: string): string {
   return path.extname(filePath);
 }
 
-export const NodeTinyFileSystem: TinyFileSystemAppendable = {
+export const NodeTinyFileSystem: TinyFileSystemWithGlob<TinyFileSystemAppendable> = {
   ID: 'NodeTinyFileSystem',
 
   getFileReadStream,
@@ -160,6 +171,7 @@ export const NodeTinyFileSystem: TinyFileSystemAppendable = {
   writeFile,
   deleteFile,
   listFiles,
+  glob,
   exists,
   getFileType,
   joinPath,
