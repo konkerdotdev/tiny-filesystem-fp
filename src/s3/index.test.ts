@@ -512,6 +512,7 @@ describe('S3TinyFileSystem', () => {
   describe('basename', () => {
     it('should function correctly', () => {
       expect(s3TinyFileSystem.basename('s3://foo/bar/baz.json')).toEqual('baz.json');
+      expect(s3TinyFileSystem.basename('s3://foo/bar/baz.json', '.json')).toEqual('baz');
       expect(s3TinyFileSystem.basename('s3://foo/bar')).toEqual('bar');
       expect(s3TinyFileSystem.basename('s3://foo/bar/')).toEqual('bar');
       expect(s3TinyFileSystem.basename('s3://foo/')).toEqual('foo');

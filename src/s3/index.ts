@@ -314,8 +314,8 @@ function fileName(filePath: string): P.Effect.Effect<never, TinyFileSystemError,
   );
 }
 
-function basename(fileOrDirPath: string): Ref {
-  return path.posix.basename(fileOrDirPath) as Ref;
+function basename(fileOrDirPath: string, suffix?: string): Ref {
+  return path.posix.basename(fileOrDirPath, suffix) as Ref;
 }
 
 function extname(filePath: string): string {

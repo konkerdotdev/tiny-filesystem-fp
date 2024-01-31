@@ -377,6 +377,7 @@ describe('MemFsTinyFileSystem', () => {
   describe('basename', () => {
     it('should function correctly', () => {
       expect(memFsTinyFileSystem.basename('foo/bar/baz.json')).toEqual('baz.json');
+      expect(memFsTinyFileSystem.basename('foo/bar/baz.json', '.json')).toEqual('baz');
       expect(memFsTinyFileSystem.basename('foo/bar')).toEqual('bar');
       expect(memFsTinyFileSystem.basename('foo/bar/')).toEqual('bar');
       expect(memFsTinyFileSystem.basename('foo/')).toEqual('foo');

@@ -355,6 +355,7 @@ describe('NodeTinyFileSystem', () => {
   describe('basename', () => {
     it('should function correctly', () => {
       expect(unit.basename('foo/bar/baz.json')).toEqual('baz.json');
+      expect(unit.basename('foo/bar/baz.json', '.json')).toEqual('baz');
       expect(unit.basename('foo/bar')).toEqual('bar');
       expect(unit.basename('foo/bar/')).toEqual('bar');
       expect(unit.basename('foo/')).toEqual('foo');

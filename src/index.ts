@@ -136,8 +136,9 @@ export type TinyFileSystem = {
    * Extract the last part of a file or directory path
    *
    * @param fileOrDirPath - The full path of the file or directory
+   * @param [suffix] - Optional suffix to remove
    */
-  basename: (fileOrDirPath: string) => Ref;
+  basename: (fileOrDirPath: string, suffix?: string) => Ref;
 
   /**
    * Join the given parts into a full path
