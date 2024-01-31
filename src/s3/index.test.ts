@@ -509,6 +509,16 @@ describe('S3TinyFileSystem', () => {
     });
   });
 
+  describe('basename', () => {
+    it('should function correctly', () => {
+      expect(s3TinyFileSystem.basename('s3://foo/bar/baz.json')).toEqual('baz.json');
+      expect(s3TinyFileSystem.basename('s3://foo/bar')).toEqual('bar');
+      expect(s3TinyFileSystem.basename('s3://foo/bar/')).toEqual('bar');
+      expect(s3TinyFileSystem.basename('s3://foo/')).toEqual('foo');
+      expect(s3TinyFileSystem.basename('s3://foo')).toEqual('foo');
+    });
+  });
+
   describe('relative', () => {
     it('should function correctly', async () => {
       expect(s3TinyFileSystem.relative('s3://foo/bar/', 's3://foo/bar/baz/qux.json')).toBe('baz/qux.json');

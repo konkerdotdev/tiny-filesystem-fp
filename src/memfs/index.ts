@@ -145,16 +145,17 @@ function fileName(filePath: string): P.Effect.Effect<never, TinyFileSystemError,
   return P.pipe(
     getFileType(filePath),
     P.Effect.flatMap((fileType) =>
-      P.pipe(
-        fileTypeIsFile(fileType),
-        (isFile) =>
-          isFile
-            ? P.Effect.succeed(path.basename(filePath) as FileName)
-            : P.Effect.fail(toTinyFileSystemError('ERROR MESSAGE'))
-        // FIXME: error message
+      P.pipe(fileTypeIsFile(fileType), (isFile) =>
+        isFile
+          ? P.Effect.succeed(path.basename(filePath) as FileName)
+          : P.Effect.fail(toTinyFileSystemError('Cannot get fileName of a directory'))
       )
     )
   );
+}
+
+function basename(fileOrDirPath: string): Ref {
+  return path.basename(fileOrDirPath) as Ref;
 }
 
 function extname(filePath: string): string {
@@ -185,6 +186,7 @@ export function MemFsTinyFileSystem(fsState: any = {}, cwd = '/'): TinyFileSyste
     relative,
     dirName,
     fileName,
+    basename,
     extname,
   };
 }

@@ -132,26 +132,24 @@ function relative(from: string, to: string): Ref {
 }
 
 function dirName(filePath: string): P.Effect.Effect<never, TinyFileSystemError, Ref> {
-  return P.pipe(
-    getFileType(filePath),
-    P.Effect.map((_) => path.dirname(filePath) as DirectoryPath)
-  );
+  return P.Effect.succeed(path.dirname(filePath) as DirectoryPath);
 }
 
 function fileName(filePath: string): P.Effect.Effect<never, TinyFileSystemError, FileName> {
   return P.pipe(
     getFileType(filePath),
     P.Effect.flatMap((fileType) =>
-      P.pipe(
-        fileTypeIsFile(fileType),
-        (isFile) =>
-          isFile
-            ? P.Effect.succeed(path.basename(filePath) as FileName)
-            : P.Effect.fail(toTinyFileSystemError('ERROR MESSAGE'))
-        // FIXME: error message
+      P.pipe(fileTypeIsFile(fileType), (isFile) =>
+        isFile
+          ? P.Effect.succeed(path.basename(filePath) as FileName)
+          : P.Effect.fail(toTinyFileSystemError('Cannot get file name of a directory'))
       )
     )
   );
+}
+
+function basename(fileOrDirPath: string): Ref {
+  return path.basename(fileOrDirPath) as Ref;
 }
 
 function extname(filePath: string): string {
@@ -178,5 +176,6 @@ export const NodeTinyFileSystem: TinyFileSystemWithGlob<TinyFileSystemAppendable
   relative,
   dirName,
   fileName,
+  basename,
   extname,
 };
