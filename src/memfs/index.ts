@@ -135,10 +135,7 @@ function relative(from: string, to: string): Ref {
 }
 
 function dirName(filePath: string): P.Effect.Effect<never, TinyFileSystemError, Ref> {
-  return P.pipe(
-    getFileType(filePath),
-    P.Effect.map((_) => path.dirname(filePath) as DirectoryPath)
-  );
+  return P.Effect.succeed(path.dirname(filePath) as DirectoryPath);
 }
 
 function fileName(filePath: string): P.Effect.Effect<never, TinyFileSystemError, FileName> {
