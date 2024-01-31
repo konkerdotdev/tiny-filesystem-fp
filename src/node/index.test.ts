@@ -352,6 +352,16 @@ describe('NodeTinyFileSystem', () => {
     });
   });
 
+  describe('basename', () => {
+    it('should function correctly', () => {
+      expect(unit.basename('foo/bar/baz.json')).toEqual('baz.json');
+      expect(unit.basename('foo/bar')).toEqual('bar');
+      expect(unit.basename('foo/bar/')).toEqual('bar');
+      expect(unit.basename('foo/')).toEqual('foo');
+      expect(unit.basename('foo')).toEqual('foo');
+    });
+  });
+
   describe('extname', () => {
     it('should return the file extension', () => {
       const filePath = '/path/to/file.txt';

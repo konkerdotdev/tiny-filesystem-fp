@@ -314,6 +314,10 @@ function fileName(filePath: string): P.Effect.Effect<never, TinyFileSystemError,
   );
 }
 
+function basename(fileOrDirPath: string): Ref {
+  return path.posix.basename(fileOrDirPath) as Ref;
+}
+
 function extname(filePath: string): string {
   return path.posix.extname(filePath);
 }
@@ -331,6 +335,7 @@ export const S3TinyFileSystem = (config: S3ClientConfig): P.Effect.Effect<S3Fact
         relative,
         dirName,
         fileName,
+        basename,
         extname,
 
         getFileReadStream: getFileReadStream(s3Client),

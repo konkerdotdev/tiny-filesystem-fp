@@ -133,6 +133,13 @@ export type TinyFileSystem = {
   fileName: (filePath: string) => P.Effect.Effect<never, TinyFileSystemError, FileName>;
 
   /**
+   * Extract the last part of a file or directory path
+   *
+   * @param fileOrDirPath - The full path of the file or directory
+   */
+  basename: (fileOrDirPath: string) => Ref;
+
+  /**
    * Join the given parts into a full path
    *
    * @param parts - The parts of the path to join

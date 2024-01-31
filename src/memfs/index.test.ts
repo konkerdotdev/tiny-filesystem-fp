@@ -374,6 +374,16 @@ describe('MemFsTinyFileSystem', () => {
     });
   });
 
+  describe('basename', () => {
+    it('should function correctly', () => {
+      expect(memFsTinyFileSystem.basename('foo/bar/baz.json')).toEqual('baz.json');
+      expect(memFsTinyFileSystem.basename('foo/bar')).toEqual('bar');
+      expect(memFsTinyFileSystem.basename('foo/bar/')).toEqual('bar');
+      expect(memFsTinyFileSystem.basename('foo/')).toEqual('foo');
+      expect(memFsTinyFileSystem.basename('foo')).toEqual('foo');
+    });
+  });
+
   describe('extname', () => {
     it('should return the file extension', () => {
       const filePath = '/path/to/file.txt';
