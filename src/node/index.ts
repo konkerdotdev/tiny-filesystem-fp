@@ -156,6 +156,10 @@ function extname(filePath: string): string {
   return path.extname(filePath);
 }
 
+function isAbsolute(fileOrDirPath: string): boolean {
+  return path.isAbsolute(fileOrDirPath);
+}
+
 export const NodeTinyFileSystem: TinyFileSystemWithGlob<TinyFileSystemAppendable> = {
   ID: 'NodeTinyFileSystem',
 
@@ -178,4 +182,5 @@ export const NodeTinyFileSystem: TinyFileSystemWithGlob<TinyFileSystemAppendable
   fileName,
   basename,
   extname,
+  isAbsolute,
 };

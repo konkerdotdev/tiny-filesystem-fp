@@ -371,4 +371,12 @@ describe('NodeTinyFileSystem', () => {
       expect(actual).toEqual(expected);
     });
   });
+
+  describe('isAbsolute', () => {
+    it('should work as expected', () => {
+      expect(unit.isAbsolute('/path/to/file.txt')).toEqual(true);
+      expect(unit.isAbsolute('path/to/file.txt')).toEqual(false);
+      expect(unit.isAbsolute('./path/to/file.txt')).toEqual(false);
+    });
+  });
 });

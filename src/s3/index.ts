@@ -322,6 +322,10 @@ function extname(filePath: string): string {
   return path.posix.extname(filePath);
 }
 
+function isAbsolute(fileOrDirPath: string): boolean {
+  return fileOrDirPath.startsWith(s3Utils.S3_PROTOCOL);
+}
+
 export const S3TinyFileSystem = (config: S3ClientConfig): P.Effect.Effect<S3FactoryDeps, never, TinyFileSystem> =>
   P.pipe(
     S3FactoryDeps,
@@ -337,6 +341,7 @@ export const S3TinyFileSystem = (config: S3ClientConfig): P.Effect.Effect<S3Fact
         fileName,
         basename,
         extname,
+        isAbsolute,
 
         getFileReadStream: getFileReadStream(s3Client),
         getFileLineReadStream: getFileLineReadStream(s3Client),

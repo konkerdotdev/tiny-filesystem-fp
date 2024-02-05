@@ -393,4 +393,12 @@ describe('MemFsTinyFileSystem', () => {
       expect(actual).toEqual(expected);
     });
   });
+
+  describe('isAbsolute', () => {
+    it('should work as expected', () => {
+      expect(memFsTinyFileSystem.isAbsolute('/path/to/file.txt')).toEqual(true);
+      expect(memFsTinyFileSystem.isAbsolute('path/to/file.txt')).toEqual(false);
+      expect(memFsTinyFileSystem.isAbsolute('./path/to/file.txt')).toEqual(false);
+    });
+  });
 });

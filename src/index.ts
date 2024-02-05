@@ -164,6 +164,13 @@ export type TinyFileSystem = {
    * @param filePath - The full path of the file
    */
   extname: (filePath: string) => string;
+
+  /**
+   * Test if the given file or directory path is an absolute path
+   *
+   * @param fileOrDirPath - The full path of the file or directory
+   * */
+  isAbsolute: (filePath: string) => boolean;
 };
 
 export type TinyFileSystemAppendable<T extends TinyFileSystem = TinyFileSystem> = T & {

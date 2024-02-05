@@ -531,4 +531,12 @@ describe('S3TinyFileSystem', () => {
       expect(s3TinyFileSystem.extname('s3://foo/bar/baz/qux.json')).toBe('.json');
     });
   });
+
+  describe('isAbsolute', () => {
+    it('should work as expected', () => {
+      expect(s3TinyFileSystem.isAbsolute('s3://foo/bar/baz/qux.json')).toEqual(true);
+      expect(s3TinyFileSystem.isAbsolute('path/to/file.txt')).toEqual(false);
+      expect(s3TinyFileSystem.isAbsolute('./path/to/file.txt')).toEqual(false);
+    });
+  });
 });

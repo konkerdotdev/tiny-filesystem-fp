@@ -159,6 +159,10 @@ function extname(filePath: string): string {
   return path.extname(filePath);
 }
 
+function isAbsolute(fileOrDirPath: string): boolean {
+  return path.isAbsolute(fileOrDirPath);
+}
+
 export function MemFsTinyFileSystem(fsState: any = {}, cwd = '/'): TinyFileSystemAppendable<TinyFileSystemWithGlob> {
   // eslint-disable-next-line fp/no-unused-expression
   vol.fromJSON(fsState, cwd);
@@ -185,6 +189,7 @@ export function MemFsTinyFileSystem(fsState: any = {}, cwd = '/'): TinyFileSyste
     fileName,
     basename,
     extname,
+    isAbsolute,
   };
 }
 export type MemFsTinyFileSystem = ReturnType<typeof MemFsTinyFileSystem>;
