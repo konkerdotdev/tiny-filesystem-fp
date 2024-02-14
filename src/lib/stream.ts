@@ -5,6 +5,7 @@ import * as P from '@konker.dev/effect-ts-prelude';
 import { toError } from '@konker.dev/effect-ts-prelude';
 import readline from 'readline';
 
+import { stringToUint8Array } from './array';
 import type { TinyFileSystemError } from './error';
 import { toTinyFileSystemError } from './error';
 
@@ -12,17 +13,19 @@ import { toTinyFileSystemError } from './error';
  * Consume a readStream
  * @param readStream
  */
-export function readStreamToBuffer(readStream: Readable | ReadableStream): P.Effect.Effect<never, Error, Buffer> {
+export function readStreamToBuffer(readStream: Readable | ReadableStream): P.Effect.Effect<never, Error, Uint8Array> {
   return P.Effect.tryPromise({
     try: async () => {
-      const chunks: Array<Buffer> = [];
+      const chunks: Array<Uint8Array> = [];
       // FIXME: disabled lint
       // eslint-disable-next-line fp/no-loops,fp/no-nil
       for await (const chunk of readStream) {
         // eslint-disable-next-line fp/no-mutating-methods,fp/no-unused-expression
-        chunks.push(Buffer.from(chunk));
+        chunks.push(typeof chunk === 'string' ? stringToUint8Array(chunk) : new Uint8Array(chunk));
       }
-      return Buffer.concat(chunks);
+
+      // Merge chunks
+      return chunks.reduce((acc, val) => new Uint8Array([...acc, ...val]), new Uint8Array());
     },
     catch: toError,
   });

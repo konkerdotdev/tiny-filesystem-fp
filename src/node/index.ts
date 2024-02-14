@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer';
 import fs from 'node:fs';
 import path from 'node:path';
 import readline from 'node:readline';
@@ -110,12 +111,18 @@ function removeDirectory(dirPath: string): P.Effect.Effect<never, TinyFileSystem
   });
 }
 
-function readFile(filePath: string): P.Effect.Effect<never, TinyFileSystemError, Buffer> {
-  return P.Effect.tryPromise({ try: async () => fs.promises.readFile(filePath), catch: toTinyFileSystemError });
+function readFile(filePath: string): P.Effect.Effect<never, TinyFileSystemError, Uint8Array> {
+  return P.Effect.tryPromise({
+    try: async () => new Uint8Array(Buffer.from(await fs.promises.readFile(filePath))),
+    catch: toTinyFileSystemError,
+  });
 }
 
-function writeFile(filePath: string, data: Buffer | string): P.Effect.Effect<never, TinyFileSystemError, void> {
-  return P.Effect.tryPromise({ try: async () => fs.promises.writeFile(filePath, data), catch: toTinyFileSystemError });
+function writeFile(filePath: string, data: ArrayBuffer | string): P.Effect.Effect<never, TinyFileSystemError, void> {
+  return P.Effect.tryPromise({
+    try: async () => fs.promises.writeFile(filePath, typeof data === 'string' ? Buffer.from(data) : Buffer.from(data)),
+    catch: toTinyFileSystemError,
+  });
 }
 
 function deleteFile(filePath: string): P.Effect.Effect<never, TinyFileSystemError, void> {

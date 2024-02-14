@@ -14,6 +14,7 @@ import { PassThrough, Writable } from 'stream';
 
 import type { TinyFileSystem } from '../index';
 import { FileType } from '../index';
+import { stringToUint8Array, uint8ArrayToString } from '../lib/array';
 import * as unit from './index';
 
 describe('S3TinyFileSystem', () => {
@@ -285,7 +286,7 @@ describe('S3TinyFileSystem', () => {
     it('should function correctly', async () => {
       const result = await P.Effect.runPromise(s3TinyFileSystem.readFile('s3://foobucket/bar/exists.txt'));
       expect(s3GetObjectMock).toHaveBeenCalledTimes(1);
-      expect(result.toString()).toBe('test-file-data');
+      expect(uint8ArrayToString(result)).toBe('test-file-data');
     });
 
     it('should fail correctly', async () => {
@@ -339,7 +340,19 @@ describe('S3TinyFileSystem', () => {
           Bucket: 'foobucket',
           Key: 'bar/qux.txt',
         });
-        expect(s3UploadObjectMock?.mock?.calls?.[0]?.[1]).toBe('wham-bam-thank-you-sam');
+        expect(s3UploadObjectMock?.mock?.calls?.[0]?.[1]).toStrictEqual(Buffer.from('wham-bam-thank-you-sam'));
+      });
+
+      it('should function correctly', async () => {
+        await P.Effect.runPromise(
+          s3TinyFileSystem.writeFile('s3://foobucket/bar/qux.txt', stringToUint8Array('wham-bam-thank-you-sam'))
+        );
+        expect(s3UploadObjectMock).toHaveBeenCalledTimes(1);
+        expect(s3UploadObjectMock?.mock?.calls?.[0]?.[0]).toStrictEqual({
+          Bucket: 'foobucket',
+          Key: 'bar/qux.txt',
+        });
+        expect(s3UploadObjectMock?.mock?.calls?.[0]?.[1]).toStrictEqual(Buffer.from('wham-bam-thank-you-sam'));
       });
 
       it('should fail correctly', async () => {

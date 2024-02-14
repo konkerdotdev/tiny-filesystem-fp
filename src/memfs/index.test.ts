@@ -6,6 +6,7 @@ import { PassThrough, Readable, Writable } from 'stream';
 
 import type { DirectoryPath } from '../index';
 import { FileType } from '../index';
+import { stringToUint8Array, uint8ArrayToString } from '../lib/array';
 import * as memFs1Fixture from '../test/fixtures/memfs-1.json';
 import * as unit from './index';
 
@@ -266,19 +267,26 @@ describe('MemFsTinyFileSystem', () => {
 
   describe('readFile', () => {
     let stub1: jest.SpyInstance;
-    beforeEach(() => {
-      stub1 = jest.spyOn(fs.promises, 'readFile').mockResolvedValue(Buffer.from('some test text'));
-    });
     afterEach(() => {
       stub1.mockClear();
     });
 
     it('should function correctly', async () => {
+      stub1 = jest.spyOn(fs.promises, 'readFile').mockResolvedValue(Buffer.from('some test text'));
       const data = await P.Effect.runPromise(memFsTinyFileSystem.readFile('/foo/bar.txt'));
 
       expect(stub1).toHaveBeenCalledTimes(1);
       expect(stub1.mock.calls[0][0]).toBe('/foo/bar.txt');
-      expect(data.toString()).toBe('some test text');
+      expect(uint8ArrayToString(data)).toBe('some test text');
+    });
+
+    it('should function correctly', async () => {
+      stub1 = jest.spyOn(fs.promises, 'readFile').mockResolvedValue('some test text');
+      const data = await P.Effect.runPromise(memFsTinyFileSystem.readFile('/foo/bar.txt'));
+
+      expect(stub1).toHaveBeenCalledTimes(1);
+      expect(stub1.mock.calls[0][0]).toBe('/foo/bar.txt');
+      expect(uint8ArrayToString(data)).toBe('some test text');
     });
   });
 
@@ -296,7 +304,15 @@ describe('MemFsTinyFileSystem', () => {
 
       expect(stub1).toHaveBeenCalledTimes(1);
       expect(stub1.mock.calls[0][0]).toBe('/foo/bar.txt');
-      expect(stub1.mock.calls[0][1]).toBe('some test text');
+      expect(stub1.mock.calls[0][1]).toStrictEqual('some test text');
+    });
+
+    it('should function correctly', async () => {
+      await P.Effect.runPromise(memFsTinyFileSystem.writeFile('/foo/bar.txt', stringToUint8Array('some test text')));
+
+      expect(stub1).toHaveBeenCalledTimes(1);
+      expect(stub1.mock.calls[0][0]).toBe('/foo/bar.txt');
+      expect(stub1.mock.calls[0][1]).toStrictEqual(Buffer.from(stringToUint8Array('some test text')));
     });
   });
 

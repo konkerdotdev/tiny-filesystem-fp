@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer';
 import type readline from 'node:readline';
 import type { Readable, Writable } from 'node:stream';
 
@@ -159,7 +160,7 @@ const getFileType =
 
 const readFile =
   (s3Client: S3Client) =>
-  (s3url: string): P.Effect.Effect<never, TinyFileSystemError, Buffer> => {
+  (s3url: string): P.Effect.Effect<never, TinyFileSystemError, Uint8Array> => {
     return P.pipe(
       s3Utils.parseS3Url(s3url),
       P.Effect.filterOrFail(s3UrlDataIsFile, () =>
@@ -177,6 +178,7 @@ const readFile =
         )
       ),
       P.Effect.flatMap((resp) => readStreamToBuffer(resp.Body as Readable)),
+      P.Effect.map((buffer) => new Uint8Array(buffer)),
       P.Effect.mapError(toTinyFileSystemError),
       P.Effect.provideService(S3ClientDeps, S3ClientDeps.of({ s3Client }))
     );
@@ -184,7 +186,7 @@ const readFile =
 
 const writeFile =
   (s3Client: S3Client) =>
-  (s3url: string, data: Buffer | string): P.Effect.Effect<never, TinyFileSystemError, void> => {
+  (s3url: string, data: ArrayBuffer | string): P.Effect.Effect<never, TinyFileSystemError, void> => {
     return P.pipe(
       s3Utils.parseS3Url(s3url),
       P.Effect.filterOrFail(s3UrlDataIsFile, () =>
@@ -196,7 +198,7 @@ const writeFile =
             Bucket: parsed.Bucket,
             Key: parsed.FullPath,
           },
-          data
+          typeof data === 'string' ? Buffer.from(data) : Buffer.from(data)
         )
       ),
       P.Effect.mapError(toTinyFileSystemError),

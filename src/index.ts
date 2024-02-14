@@ -58,11 +58,11 @@ export type TinyFileSystem = {
   exists: (fileOrDirPath: string) => P.Effect.Effect<never, TinyFileSystemError, boolean>;
 
   /**
-   * Read the content of the given file into a Buffer
+   * Read the content of the given file into a Uint8Array
    *
    * @param filePath - The full path of the file to read
    */
-  readFile: (filePath: string) => P.Effect.Effect<never, TinyFileSystemError, Buffer>;
+  readFile: (filePath: string) => P.Effect.Effect<never, TinyFileSystemError, Uint8Array>;
 
   /**
    * Write the given data into the given file
@@ -70,7 +70,7 @@ export type TinyFileSystem = {
    * @param filePath - The full path of the file to write
    * @param data - The data to write
    */
-  writeFile: (filePath: string, data: string | Buffer) => P.Effect.Effect<never, TinyFileSystemError, void>;
+  writeFile: (filePath: string, data: string | ArrayBuffer) => P.Effect.Effect<never, TinyFileSystemError, void>;
 
   /**
    * Delete the given file

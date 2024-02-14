@@ -7,6 +7,7 @@ import { PassThrough, Readable, Writable } from 'stream';
 
 import type { DirectoryPath } from '../index';
 import { FileType } from '../index';
+import { stringToUint8Array, uint8ArrayToString } from '../lib/array';
 import { NodeTinyFileSystem as unit } from './index';
 
 describe('NodeTinyFileSystem', () => {
@@ -256,7 +257,7 @@ describe('NodeTinyFileSystem', () => {
 
       expect(stub1).toHaveBeenCalledTimes(1);
       expect(stub1.mock.calls[0][0]).toBe('/foo/bar.txt');
-      expect(data.toString()).toBe('some test text');
+      expect(uint8ArrayToString(data)).toBe('some test text');
     });
   });
 
@@ -274,7 +275,15 @@ describe('NodeTinyFileSystem', () => {
 
       expect(stub1).toHaveBeenCalledTimes(1);
       expect(stub1.mock.calls[0][0]).toBe('/foo/bar.txt');
-      expect(stub1.mock.calls[0][1]).toBe('some test text');
+      expect(stub1.mock.calls[0][1]).toStrictEqual(Buffer.from('some test text'));
+    });
+
+    it('should function correctly', async () => {
+      await P.Effect.runPromise(unit.writeFile('/foo/bar.txt', stringToUint8Array('some test text')));
+
+      expect(stub1).toHaveBeenCalledTimes(1);
+      expect(stub1.mock.calls[0][0]).toBe('/foo/bar.txt');
+      expect(stub1.mock.calls[0][1]).toStrictEqual(Buffer.from('some test text'));
     });
   });
 
