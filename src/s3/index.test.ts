@@ -14,7 +14,7 @@ import { PassThrough, Writable } from 'stream';
 
 import type { TinyFileSystem } from '../index';
 import { FileType } from '../index';
-import { stringToUint8Array, uint8ArrayToString } from '../lib/array';
+import { arrayBufferToString, stringToUint8Array } from '../lib/array';
 import * as unit from './index';
 
 describe('S3TinyFileSystem', () => {
@@ -286,7 +286,7 @@ describe('S3TinyFileSystem', () => {
     it('should function correctly', async () => {
       const result = await P.Effect.runPromise(s3TinyFileSystem.readFile('s3://foobucket/bar/exists.txt'));
       expect(s3GetObjectMock).toHaveBeenCalledTimes(1);
-      expect(uint8ArrayToString(result)).toBe('test-file-data');
+      expect(arrayBufferToString(result)).toBe('test-file-data');
     });
 
     it('should fail correctly', async () => {

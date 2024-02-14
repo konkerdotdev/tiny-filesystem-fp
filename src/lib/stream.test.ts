@@ -2,7 +2,7 @@ import { PassThrough, Readable } from 'node:stream';
 
 import * as P from '@konker.dev/effect-ts-prelude';
 
-import { uint8ArrayToString } from './array';
+import { arrayBufferToString } from './array';
 import * as unit from './stream';
 
 describe('stream utils', () => {
@@ -10,13 +10,13 @@ describe('stream utils', () => {
     it('should resolve as expected', async () => {
       const readStream = Readable.from('konker');
       const data = await P.Effect.runPromise(unit.readStreamToBuffer(readStream));
-      expect(uint8ArrayToString(data)).toEqual('konker');
+      expect(arrayBufferToString(data)).toEqual('konker');
     });
 
     it('should resolve as expected', async () => {
       const readStream = Readable.from(Buffer.from('konker'));
       const data = await P.Effect.runPromise(unit.readStreamToBuffer(readStream));
-      expect(uint8ArrayToString(data)).toEqual('konker');
+      expect(arrayBufferToString(data)).toEqual('konker');
     });
 
     it('should reject as expected', async () => {

@@ -6,7 +6,7 @@ import { PassThrough, Readable, Writable } from 'stream';
 
 import type { DirectoryPath } from '../index';
 import { FileType } from '../index';
-import { stringToUint8Array, uint8ArrayToString } from '../lib/array';
+import { arrayBufferToString, stringToUint8Array } from '../lib/array';
 import * as memFs1Fixture from '../test/fixtures/memfs-1.json';
 import * as unit from './index';
 
@@ -277,7 +277,7 @@ describe('MemFsTinyFileSystem', () => {
 
       expect(stub1).toHaveBeenCalledTimes(1);
       expect(stub1.mock.calls[0][0]).toBe('/foo/bar.txt');
-      expect(uint8ArrayToString(data)).toBe('some test text');
+      expect(arrayBufferToString(data)).toBe('some test text');
     });
 
     it('should function correctly', async () => {
@@ -286,7 +286,7 @@ describe('MemFsTinyFileSystem', () => {
 
       expect(stub1).toHaveBeenCalledTimes(1);
       expect(stub1.mock.calls[0][0]).toBe('/foo/bar.txt');
-      expect(uint8ArrayToString(data)).toBe('some test text');
+      expect(arrayBufferToString(data)).toBe('some test text');
     });
   });
 
