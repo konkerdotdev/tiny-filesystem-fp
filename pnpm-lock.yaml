@@ -10,16 +10,16 @@ dependencies:
     version: 3.501.0
   '@effect/schema':
     specifier: ^0.61.3
-    version: 0.61.3(effect@2.2.2)(fast-check@3.15.0)
+    version: 0.61.3(effect@2.2.5)(fast-check@3.15.0)
   '@konker.dev/aws-client-effect-s3':
     specifier: ^0.0.5
     version: 0.0.5(fast-check@3.15.0)
   '@konker.dev/effect-ts-prelude':
     specifier: latest
-    version: 0.0.9(@effect/schema@0.61.3)(effect@2.2.2)
+    version: 0.0.11(@effect/schema@0.61.3)(effect@2.2.5)
   effect:
-    specifier: ^2.2.2
-    version: 2.2.2
+    specifier: 2.2.5
+    version: 2.2.5
   fast-glob:
     specifier: ^3.3.2
     version: 3.3.2
@@ -1101,13 +1101,13 @@ packages:
     resolution: {integrity: sha512-e8vfKbjnbYiyneBincEFS0tzXluopGK77OkVFbPRtUbNDS5tJfb+jiwOQEiqASDsadcZmd+9J9+Q6v/z7GuN2g==}
     dev: true
 
-  /@effect/schema@0.61.3(effect@2.2.2)(fast-check@3.15.0):
+  /@effect/schema@0.61.3(effect@2.2.5)(fast-check@3.15.0):
     resolution: {integrity: sha512-2e6aC6e5qniRJtKXY+hBAm8azP+pJv2hmQ+AwjA4abhTMILam27lMuXUxpNLmpNghr4HdjcZAs+R6PcKPBF12A==}
     peerDependencies:
       effect: ^2.2.2
       fast-check: ^3.13.2
     dependencies:
-      effect: 2.2.2
+      effect: 2.2.5
       fast-check: 3.15.0
     dev: false
 
@@ -1441,32 +1441,22 @@ packages:
       '@aws-sdk/client-s3': 3.501.0
       '@aws-sdk/lib-storage': 3.501.0(@aws-sdk/client-s3@3.501.0)
       '@aws-sdk/s3-request-presigner': 3.501.0
-      '@effect/schema': 0.61.3(effect@2.2.2)(fast-check@3.15.0)
-      '@konker.dev/effect-ts-prelude': 0.0.8(@effect/schema@0.61.3)(effect@2.2.2)
-      effect: 2.2.2
+      '@effect/schema': 0.61.3(effect@2.2.5)(fast-check@3.15.0)
+      '@konker.dev/effect-ts-prelude': 0.0.11(@effect/schema@0.61.3)(effect@2.2.5)
+      effect: 2.2.5
     transitivePeerDependencies:
       - aws-crt
       - fast-check
     dev: false
 
-  /@konker.dev/effect-ts-prelude@0.0.8(@effect/schema@0.61.3)(effect@2.2.2):
-    resolution: {integrity: sha512-C0W/pwhhaZT0/D1VZd4Q/yvjVWVl5S2o79uAckklCyKEFwBDcK0VpDqiM1sH1D6cuEu0mZyluaKNkPZg/nS5gA==}
+  /@konker.dev/effect-ts-prelude@0.0.11(@effect/schema@0.61.3)(effect@2.2.5):
+    resolution: {integrity: sha512-oBPHaBwButVO6VpfNFSKfDUpKoKkbnTRBYzHdu4EdJj1WKR1kGUmqHBAVdymkQbnnXx9TOJCVAoOOHg6XkABsA==}
     peerDependencies:
       '@effect/schema': ^0.61.3
       effect: ^2.2.2
     dependencies:
-      '@effect/schema': 0.61.3(effect@2.2.2)(fast-check@3.15.0)
-      effect: 2.2.2
-    dev: false
-
-  /@konker.dev/effect-ts-prelude@0.0.9(@effect/schema@0.61.3)(effect@2.2.2):
-    resolution: {integrity: sha512-Pb7a8b3tdkq18iVCjXlQPL3SONpgXP0SOCbd9CXQtubDomN9tJHHovDyYIqXTqAAj+Ds1pWfxrxsik5+qfsh2Q==}
-    peerDependencies:
-      '@effect/schema': ^0.61.3
-      effect: ^2.2.2
-    dependencies:
-      '@effect/schema': 0.61.3(effect@2.2.2)(fast-check@3.15.0)
-      effect: 2.2.2
+      '@effect/schema': 0.61.3(effect@2.2.5)(fast-check@3.15.0)
+      effect: 2.2.5
     dev: false
 
   /@nodelib/fs.scandir@2.1.5:
@@ -3674,8 +3664,8 @@ packages:
       object.defaults: 1.1.0
     dev: true
 
-  /effect@2.2.2:
-    resolution: {integrity: sha512-hY/37Ssd2Zfn0r09vDe9tSYPVS5HZBbmW4DMBO7OIIvRADgp5cnWfLhY6pVy+Bm5DXV9luFycjDcB1731WGyTA==}
+  /effect@2.2.5:
+    resolution: {integrity: sha512-F1bfJXeecK6WpZDSU1UK8C8tUr3n7AqGVL1b8HWeVlHD4192x+6yN0Eb7Qa0CASike5dsbloTfidxBZFr0IpVg==}
     dev: false
 
   /electron-to-chromium@1.4.648:
