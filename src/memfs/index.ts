@@ -13,11 +13,11 @@ import { stringToUint8Array } from '../lib/array';
 import type { TinyFileSystemError } from '../lib/error';
 import { toTinyFileSystemError } from '../lib/error';
 
-function getFileReadStream(filePath: string): P.Effect.Effect<never, TinyFileSystemError, Readable> {
+function getFileReadStream(filePath: string): P.Effect.Effect<Readable, TinyFileSystemError> {
   return P.Effect.tryPromise({ try: async () => fs.createReadStream(filePath), catch: toTinyFileSystemError });
 }
 
-function getFileLineReadStream(filePath: string): P.Effect.Effect<never, TinyFileSystemError, readline.Interface> {
+function getFileLineReadStream(filePath: string): P.Effect.Effect<readline.Interface, TinyFileSystemError> {
   return P.pipe(
     getFileReadStream(filePath),
     P.Effect.flatMap((readStream) =>
@@ -36,21 +36,21 @@ function getFileLineReadStream(filePath: string): P.Effect.Effect<never, TinyFil
   );
 }
 
-function getFileWriteStream(filePath: string): P.Effect.Effect<never, TinyFileSystemError, Writable> {
+function getFileWriteStream(filePath: string): P.Effect.Effect<Writable, TinyFileSystemError> {
   return P.Effect.tryPromise({
     try: async () => fs.createWriteStream(filePath, { flags: 'w' }),
     catch: toTinyFileSystemError,
   });
 }
 
-function getFileAppendWriteStream(filePath: string): P.Effect.Effect<never, TinyFileSystemError, Writable> {
+function getFileAppendWriteStream(filePath: string): P.Effect.Effect<Writable, TinyFileSystemError> {
   return P.Effect.tryPromise({
     try: async () => fs.createWriteStream(filePath, { flags: 'a' }),
     catch: toTinyFileSystemError,
   });
 }
 
-function listFiles(dirPath: string): P.Effect.Effect<never, TinyFileSystemError, Array<Ref>> {
+function listFiles(dirPath: string): P.Effect.Effect<Array<Ref>, TinyFileSystemError> {
   return P.Effect.tryPromise({
     try: async () => {
       const files = await fs.promises.readdir(dirPath);
@@ -60,7 +60,7 @@ function listFiles(dirPath: string): P.Effect.Effect<never, TinyFileSystemError,
   });
 }
 
-function glob(globPattern: string): P.Effect.Effect<never, TinyFileSystemError, Array<Ref>> {
+function glob(globPattern: string): P.Effect.Effect<Array<Ref>, TinyFileSystemError> {
   return P.Effect.tryPromise({
     try: async () => {
       const files = await fg.async(globPattern, { fs: fs as fg.FileSystemAdapter });
@@ -70,11 +70,11 @@ function glob(globPattern: string): P.Effect.Effect<never, TinyFileSystemError, 
   });
 }
 
-function exists(fileOrDirPath: string): P.Effect.Effect<never, TinyFileSystemError, boolean> {
+function exists(fileOrDirPath: string): P.Effect.Effect<boolean, TinyFileSystemError> {
   return P.Effect.tryPromise({ try: async () => fs.existsSync(fileOrDirPath), catch: toTinyFileSystemError });
 }
 
-function getFileType(filePath: string): P.Effect.Effect<never, TinyFileSystemError, FileType> {
+function getFileType(filePath: string): P.Effect.Effect<FileType, TinyFileSystemError> {
   return P.Effect.tryPromise({
     try: async () => {
       const stat = await fs.promises.lstat(filePath);
@@ -86,7 +86,7 @@ function getFileType(filePath: string): P.Effect.Effect<never, TinyFileSystemErr
   });
 }
 
-function createDirectory(dirPath: string): P.Effect.Effect<never, TinyFileSystemError, void> {
+function createDirectory(dirPath: string): P.Effect.Effect<void, TinyFileSystemError> {
   return P.Effect.tryPromise({
     // eslint-disable-next-line fp/no-nil
     try: async () => {
@@ -99,7 +99,7 @@ function createDirectory(dirPath: string): P.Effect.Effect<never, TinyFileSystem
   });
 }
 
-function removeDirectory(dirPath: string): P.Effect.Effect<never, TinyFileSystemError, void> {
+function removeDirectory(dirPath: string): P.Effect.Effect<void, TinyFileSystemError> {
   return P.Effect.tryPromise({
     try: async () => {
       if (fs.existsSync(dirPath)) {
@@ -112,7 +112,7 @@ function removeDirectory(dirPath: string): P.Effect.Effect<never, TinyFileSystem
   });
 }
 
-function readFile(filePath: string): P.Effect.Effect<never, TinyFileSystemError, Uint8Array> {
+function readFile(filePath: string): P.Effect.Effect<Uint8Array, TinyFileSystemError> {
   return P.Effect.tryPromise({
     try: async () => {
       const data = await fs.promises.readFile(filePath);
@@ -122,19 +122,19 @@ function readFile(filePath: string): P.Effect.Effect<never, TinyFileSystemError,
   });
 }
 
-function writeFile(filePath: string, data: ArrayBuffer | string): P.Effect.Effect<never, TinyFileSystemError, void> {
+function writeFile(filePath: string, data: ArrayBuffer | string): P.Effect.Effect<void, TinyFileSystemError> {
   return P.Effect.tryPromise({
     try: async () => fs.promises.writeFile(filePath, typeof data === 'string' ? data : Buffer.from(data)),
     catch: toTinyFileSystemError,
   });
 }
 
-function deleteFile(filePath: string): P.Effect.Effect<never, TinyFileSystemError, void> {
+function deleteFile(filePath: string): P.Effect.Effect<void, TinyFileSystemError> {
   return P.Effect.tryPromise({ try: async () => fs.promises.unlink(filePath), catch: toTinyFileSystemError });
 }
 
 // eslint-disable-next-line fp/no-rest-parameters
-function joinPath(...parts: Array<string>): P.Effect.Effect<never, TinyFileSystemError, Ref> {
+function joinPath(...parts: Array<string>): P.Effect.Effect<Ref, TinyFileSystemError> {
   return P.Effect.succeed(path.join(...parts) as Ref);
 }
 
@@ -142,11 +142,11 @@ function relative(from: string, to: string): Ref {
   return path.relative(from, to) as Ref;
 }
 
-function dirName(filePath: string): P.Effect.Effect<never, TinyFileSystemError, Ref> {
+function dirName(filePath: string): P.Effect.Effect<Ref, TinyFileSystemError> {
   return P.Effect.succeed(path.dirname(filePath) as DirectoryPath);
 }
 
-function fileName(filePath: string): P.Effect.Effect<never, TinyFileSystemError, FileName> {
+function fileName(filePath: string): P.Effect.Effect<FileName, TinyFileSystemError> {
   return P.pipe(
     getFileType(filePath),
     P.Effect.flatMap((fileType) =>

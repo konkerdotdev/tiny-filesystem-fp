@@ -24,13 +24,13 @@
   ],
   "packageManager": "pnpm@8",
   "dependencies": {
-    "@effect/schema": "^0.61.3",
-    "@konker.dev/effect-ts-prelude": "latest",
-    "effect": "2.2.5"
+    "@effect/schema": "^0.63.2",
+    "@konker.dev/effect-ts-prelude": "^0.0.13",
+    "effect": "^2.4.1"
   },
   "peerDependencies": {
     "@aws-sdk/client-s3": "^3.450.0",
-    "@konker.dev/aws-client-effect-s3": "^0.0.5",
+    "@konker.dev/aws-client-effect-s3": "^0.0.6",
     "memfs": "^4.6.0",
     "fast-glob": "^3.3.2"
   },

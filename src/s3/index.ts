@@ -21,7 +21,7 @@ import { s3ObjectIsReadable } from './utils';
 
 const getFileReadStream =
   (s3Client: S3Client) =>
-  (filePath: string): P.Effect.Effect<never, TinyFileSystemError, Readable> => {
+  (filePath: string): P.Effect.Effect<Readable, TinyFileSystemError> => {
     return P.pipe(
       s3Utils.parseS3Url(filePath),
       P.Effect.filterOrFail(s3UrlDataIsFile, () =>
@@ -45,7 +45,7 @@ const getFileReadStream =
 
 const getFileLineReadStream =
   (s3Client: S3Client) =>
-  (filePath: string): P.Effect.Effect<never, TinyFileSystemError, readline.Interface> => {
+  (filePath: string): P.Effect.Effect<readline.Interface, TinyFileSystemError> => {
     return P.pipe(
       filePath,
       getFileReadStream(s3Client),
@@ -56,7 +56,7 @@ const getFileLineReadStream =
 
 const getFileWriteStream =
   (s3Client: S3Client) =>
-  (filePath: string): P.Effect.Effect<never, TinyFileSystemError, Writable> => {
+  (filePath: string): P.Effect.Effect<Writable, TinyFileSystemError> => {
     return P.pipe(
       s3Utils.parseS3Url(filePath),
       P.Effect.filterOrFail(s3UrlDataIsFile, () =>
@@ -75,7 +75,7 @@ const getFileWriteStream =
 
 const listFiles =
   (s3Client: S3Client) =>
-  (dirPath: string): P.Effect.Effect<never, TinyFileSystemError, Array<S3IoUrl>> => {
+  (dirPath: string): P.Effect.Effect<Array<S3IoUrl>, TinyFileSystemError> => {
     function _processListing(parsed: S3UrlData, list: Array<any> | undefined, key: string): Array<S3IoUrl> {
       if (!list) return [];
       return (
@@ -131,7 +131,7 @@ const listFiles =
 
 const exists =
   (s3Client: S3Client) =>
-  (fileOrDirPath: string): P.Effect.Effect<never, TinyFileSystemError, boolean> => {
+  (fileOrDirPath: string): P.Effect.Effect<boolean, TinyFileSystemError> => {
     return P.pipe(
       s3Utils.parseS3Url(fileOrDirPath),
       P.Effect.flatMap((parsed: S3UrlData) =>
@@ -151,7 +151,7 @@ const exists =
 
 const getFileType =
   (_s3Client: S3Client) =>
-  (filePath: string): P.Effect.Effect<never, TinyFileSystemError, FileType> => {
+  (filePath: string): P.Effect.Effect<FileType, TinyFileSystemError> => {
     return P.pipe(
       s3Utils.parseS3Url(filePath),
       P.Effect.map((parsed) => parsed.Type)
@@ -160,7 +160,7 @@ const getFileType =
 
 const readFile =
   (s3Client: S3Client) =>
-  (s3url: string): P.Effect.Effect<never, TinyFileSystemError, Uint8Array> => {
+  (s3url: string): P.Effect.Effect<Uint8Array, TinyFileSystemError> => {
     return P.pipe(
       s3Utils.parseS3Url(s3url),
       P.Effect.filterOrFail(s3UrlDataIsFile, () =>
@@ -186,7 +186,7 @@ const readFile =
 
 const writeFile =
   (s3Client: S3Client) =>
-  (s3url: string, data: ArrayBuffer | string): P.Effect.Effect<never, TinyFileSystemError, void> => {
+  (s3url: string, data: ArrayBuffer | string): P.Effect.Effect<void, TinyFileSystemError> => {
     return P.pipe(
       s3Utils.parseS3Url(s3url),
       P.Effect.filterOrFail(s3UrlDataIsFile, () =>
@@ -208,7 +208,7 @@ const writeFile =
 
 const deleteFile =
   (s3Client: S3Client) =>
-  (filePath: string): P.Effect.Effect<never, TinyFileSystemError, void> => {
+  (filePath: string): P.Effect.Effect<void, TinyFileSystemError> => {
     return P.pipe(
       s3Utils.parseS3Url(filePath),
       P.Effect.filterOrFail(s3UrlDataIsFile, () =>
@@ -227,7 +227,7 @@ const deleteFile =
 
 const createDirectory =
   (s3Client: S3Client) =>
-  (dirPath: string): P.Effect.Effect<never, TinyFileSystemError, void> => {
+  (dirPath: string): P.Effect.Effect<void, TinyFileSystemError> => {
     return P.pipe(
       s3Utils.parseS3Url(dirPath),
       P.Effect.filterOrFail(s3UrlDataIsDirectory, () =>
@@ -247,8 +247,8 @@ const createDirectory =
 
 const removeDirectory =
   (s3Client: S3Client) =>
-  (dirPath: string): P.Effect.Effect<never, TinyFileSystemError, void> => {
-    function _purgeItem(s3ItemUrl: S3IoUrl): P.Effect.Effect<never, TinyFileSystemError, void> {
+  (dirPath: string): P.Effect.Effect<void, TinyFileSystemError> => {
+    function _purgeItem(s3ItemUrl: S3IoUrl): P.Effect.Effect<void, TinyFileSystemError> {
       return P.pipe(
         s3ItemUrl,
         getFileType(s3Client),
@@ -285,7 +285,7 @@ const removeDirectory =
   };
 
 // eslint-disable-next-line fp/no-rest-parameters
-function joinPath(...parts: Array<string>): P.Effect.Effect<never, TinyFileSystemError, Ref> {
+function joinPath(...parts: Array<string>): P.Effect.Effect<Ref, TinyFileSystemError> {
   if (!parts[0]) return P.Effect.succeed('' as Path);
 
   return parts[0].startsWith(s3Utils.S3_PROTOCOL)
@@ -302,14 +302,14 @@ function relative(from: string, to: string): Ref {
   return path.posix.relative(from, to) as S3IoUrl;
 }
 
-function dirName(filePath: string): P.Effect.Effect<never, TinyFileSystemError, Ref> {
+function dirName(filePath: string): P.Effect.Effect<Ref, TinyFileSystemError> {
   return P.pipe(
     s3Utils.parseS3Url(filePath),
     P.Effect.map((parsed) => s3Utils.createS3Url(parsed.Bucket, parsed.Path))
   );
 }
 
-function fileName(filePath: string): P.Effect.Effect<never, TinyFileSystemError, Ref> {
+function fileName(filePath: string): P.Effect.Effect<Ref, TinyFileSystemError> {
   return P.pipe(
     s3Utils.parseS3Url(filePath),
     P.Effect.flatMap((parsed) => P.pipe(parsed.File, P.Effect.fromNullable, P.Effect.mapError(toTinyFileSystemError)))
@@ -328,7 +328,7 @@ function isAbsolute(fileOrDirPath: string): boolean {
   return fileOrDirPath.startsWith(s3Utils.S3_PROTOCOL);
 }
 
-export const S3TinyFileSystem = (config: S3ClientConfig): P.Effect.Effect<S3FactoryDeps, never, TinyFileSystem> =>
+export const S3TinyFileSystem = (config: S3ClientConfig): P.Effect.Effect<TinyFileSystem, never, S3FactoryDeps> =>
   P.pipe(
     S3FactoryDeps,
     P.Effect.map((deps) => {

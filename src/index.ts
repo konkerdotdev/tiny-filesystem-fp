@@ -41,28 +41,28 @@ export type TinyFileSystem = {
    *
    * @param dirPath - The full path to the directory to list
    */
-  listFiles: (dirPath: string) => P.Effect.Effect<never, TinyFileSystemError, Array<Ref>>;
+  listFiles: (dirPath: string) => P.Effect.Effect<Array<Ref>, TinyFileSystemError>;
 
   /**
    * Resolve the type of the given file or directory
    *
    * @param filePath - The full path to the file or directory
    */
-  getFileType: (filePath: string) => P.Effect.Effect<never, TinyFileSystemError, FileType>;
+  getFileType: (filePath: string) => P.Effect.Effect<FileType, TinyFileSystemError>;
 
   /**
    * Check if the given file or directory path exists
    *
    * @param fileOrDirPath - The full path to the file or directory to test
    */
-  exists: (fileOrDirPath: string) => P.Effect.Effect<never, TinyFileSystemError, boolean>;
+  exists: (fileOrDirPath: string) => P.Effect.Effect<boolean, TinyFileSystemError>;
 
   /**
    * Read the content of the given file into a Uint8Array
    *
    * @param filePath - The full path of the file to read
    */
-  readFile: (filePath: string) => P.Effect.Effect<never, TinyFileSystemError, Uint8Array>;
+  readFile: (filePath: string) => P.Effect.Effect<Uint8Array, TinyFileSystemError>;
 
   /**
    * Write the given data into the given file
@@ -70,14 +70,14 @@ export type TinyFileSystem = {
    * @param filePath - The full path of the file to write
    * @param data - The data to write
    */
-  writeFile: (filePath: string, data: string | ArrayBuffer) => P.Effect.Effect<never, TinyFileSystemError, void>;
+  writeFile: (filePath: string, data: string | ArrayBuffer) => P.Effect.Effect<void, TinyFileSystemError>;
 
   /**
    * Delete the given file
    *
    * @param filePath - The full path of the file to delete
    */
-  deleteFile: (filePath: string) => P.Effect.Effect<never, TinyFileSystemError, void>;
+  deleteFile: (filePath: string) => P.Effect.Effect<void, TinyFileSystemError>;
 
   /**
    * Create the given directory
@@ -86,7 +86,7 @@ export type TinyFileSystem = {
    *
    * @param dirPath - The full path of the directory to create
    */
-  createDirectory: (dirPath: string) => P.Effect.Effect<never, TinyFileSystemError, void>;
+  createDirectory: (dirPath: string) => P.Effect.Effect<void, TinyFileSystemError>;
 
   /**
    * Remove the given directory
@@ -95,42 +95,42 @@ export type TinyFileSystem = {
    *
    * @param dirPath - The full path of the directory to remove
    */
-  removeDirectory: (dirPath: string) => P.Effect.Effect<never, TinyFileSystemError, void>;
+  removeDirectory: (dirPath: string) => P.Effect.Effect<void, TinyFileSystemError>;
 
   /**
    * Get a read stream for the given file
    *
    * @param filePath
    */
-  getFileReadStream: (filePath: string) => P.Effect.Effect<never, TinyFileSystemError, Readable>;
+  getFileReadStream: (filePath: string) => P.Effect.Effect<Readable, TinyFileSystemError>;
 
   /**
    * Get a stream which will read the given file line by line
    *
    * @param filePath - THe full path of the file to read
    */
-  getFileLineReadStream: (filePath: string) => P.Effect.Effect<never, TinyFileSystemError, readline.Interface>;
+  getFileLineReadStream: (filePath: string) => P.Effect.Effect<readline.Interface, TinyFileSystemError>;
 
   /**
    * Get a stream to write to the given file
    *
    * @param filePath - The full path of the file
    */
-  getFileWriteStream: (filePath: string) => P.Effect.Effect<never, TinyFileSystemError, Writable>;
+  getFileWriteStream: (filePath: string) => P.Effect.Effect<Writable, TinyFileSystemError>;
 
   /**
    * Get the parent directory path from the given file path
    *
    * @param filePath - The full path of the file
    */
-  dirName: (filePath: string) => P.Effect.Effect<never, TinyFileSystemError, Ref>;
+  dirName: (filePath: string) => P.Effect.Effect<Ref, TinyFileSystemError>;
 
   /**
    * Extract the file name from a file path
    *
    * @param filePath - The full path of the file
    */
-  fileName: (filePath: string) => P.Effect.Effect<never, TinyFileSystemError, FileName>;
+  fileName: (filePath: string) => P.Effect.Effect<FileName, TinyFileSystemError>;
 
   /**
    * Extract the last part of a file or directory path
@@ -146,7 +146,7 @@ export type TinyFileSystem = {
    * @param parts - The parts of the path to join
    */
   // eslint-disable-next-line fp/no-rest-parameters
-  joinPath: (...parts: Array<string>) => P.Effect.Effect<never, TinyFileSystemError, Ref>;
+  joinPath: (...parts: Array<string>) => P.Effect.Effect<Ref, TinyFileSystemError>;
 
   /**
    * Get a relative path from one full path to another full path
@@ -174,11 +174,11 @@ export type TinyFileSystem = {
 };
 
 export type TinyFileSystemAppendable<T extends TinyFileSystem = TinyFileSystem> = T & {
-  readonly getFileAppendWriteStream: (filePath: string) => P.Effect.Effect<never, TinyFileSystemError, Writable>;
+  readonly getFileAppendWriteStream: (filePath: string) => P.Effect.Effect<Writable, TinyFileSystemError>;
 };
 
 export type TinyFileSystemWithGlob<T extends TinyFileSystem = TinyFileSystem> = T & {
-  readonly glob: (dirPath: string) => P.Effect.Effect<never, TinyFileSystemError, Array<Ref>>;
+  readonly glob: (dirPath: string) => P.Effect.Effect<Array<Ref>, TinyFileSystemError>;
 };
 
 export { MemFsTinyFileSystem } from './memfs';

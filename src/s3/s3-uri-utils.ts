@@ -56,7 +56,7 @@ export function createS3Url(bucket: string, dirPath?: string, part?: string): S3
  *
  * @param {string} s3url
  */
-export function parseS3Url(s3url: string): P.Effect.Effect<never, TinyFileSystemError, S3UrlData> {
+export function parseS3Url(s3url: string): P.Effect.Effect<S3UrlData, TinyFileSystemError> {
   return P.pipe(
     P.Effect.try(() => new URL(s3url)),
     P.Effect.filterOrFail(

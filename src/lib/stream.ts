@@ -13,7 +13,7 @@ import { toTinyFileSystemError } from './error';
  * Consume a readStream
  * @param readStream
  */
-export function readStreamToBuffer(readStream: Readable | ReadableStream): P.Effect.Effect<never, Error, Uint8Array> {
+export function readStreamToBuffer(readStream: Readable | ReadableStream): P.Effect.Effect<Uint8Array, Error> {
   return P.Effect.tryPromise({
     try: async () => {
       const chunks: Array<Uint8Array> = [];
@@ -34,7 +34,7 @@ export function readStreamToBuffer(readStream: Readable | ReadableStream): P.Eff
 /**
  * Wait for a readable stream to fully pipe to a write-stream
  */
-export function waitForStreamPipe(readStream: Readable, writeStream: Writable): P.Effect.Effect<never, Error, number> {
+export function waitForStreamPipe(readStream: Readable, writeStream: Writable): P.Effect.Effect<number, Error> {
   return P.Effect.tryPromise({
     try: () =>
       // eslint-disable-next-line fp/no-nil
@@ -63,7 +63,7 @@ export function waitForStreamPipe(readStream: Readable, writeStream: Writable): 
 
 export function readlineInterfaceFromReadStream(
   readStream: Readable
-): P.Effect.Effect<never, TinyFileSystemError, readline.Interface> {
+): P.Effect.Effect<readline.Interface, TinyFileSystemError> {
   return P.Effect.tryPromise({
     try: async () =>
       readline.createInterface({
