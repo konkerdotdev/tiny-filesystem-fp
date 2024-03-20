@@ -337,6 +337,8 @@ export const S3TinyFileSystem = (config: S3ClientConfig): P.Effect.Effect<TinyFi
       return {
         ID: 'S3TinyFileSystem',
 
+        PATH_SEP: path.posix.sep,
+
         joinPath,
         relative,
         dirName,

@@ -170,6 +170,8 @@ function isAbsolute(fileOrDirPath: string): boolean {
 export const NodeTinyFileSystem: TinyFileSystemWithGlob<TinyFileSystemAppendable> = {
   ID: 'NodeTinyFileSystem',
 
+  PATH_SEP: path.sep,
+
   getFileReadStream,
   getFileLineReadStream,
   getFileWriteStream,

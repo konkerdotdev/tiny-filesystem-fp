@@ -36,6 +36,8 @@ export function fileTypeIsOther(fileType: FileType): fileType is FileType.Other 
 export type TinyFileSystem = {
   readonly ID: string;
 
+  readonly PATH_SEP: string;
+
   /**
    * List the files and directories in the given directory path
    *

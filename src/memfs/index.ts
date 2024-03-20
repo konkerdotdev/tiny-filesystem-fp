@@ -178,6 +178,8 @@ export function MemFsTinyFileSystem(fsState: any = {}, cwd = '/'): TinyFileSyste
   return {
     ID: 'MemFsTinyFileSystem',
 
+    PATH_SEP: path.posix.sep,
+
     getFileReadStream,
     getFileLineReadStream,
     getFileWriteStream,
