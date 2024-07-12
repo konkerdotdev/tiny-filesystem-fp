@@ -12,12 +12,12 @@ export enum FileType {
 }
 export type FileTypeS = `${FileType}`;
 
-export const DirectoryPath = P.pipe(P.Schema.string, P.Schema.brand(Symbol.for('DirectoryPath')));
-export type DirectoryPath = P.Schema.Schema.To<typeof DirectoryPath>;
-export const FileName = P.pipe(P.Schema.string, P.Schema.brand(Symbol.for('FileName')));
-export type FileName = P.Schema.Schema.To<typeof FileName>;
-export const IoUrl = P.pipe(P.Schema.string, P.Schema.brand(Symbol.for('IoUrl')));
-export type IoUrl = P.Schema.Schema.To<typeof IoUrl>;
+export const DirectoryPath = P.pipe(P.Schema.String, P.Schema.brand(Symbol.for('DirectoryPath')));
+export type DirectoryPath = P.Schema.Schema.Type<typeof DirectoryPath>;
+export const FileName = P.pipe(P.Schema.String, P.Schema.brand(Symbol.for('FileName')));
+export type FileName = P.Schema.Schema.Type<typeof FileName>;
+export const IoUrl = P.pipe(P.Schema.String, P.Schema.brand(Symbol.for('IoUrl')));
+export type IoUrl = P.Schema.Schema.Type<typeof IoUrl>;
 export type Path = DirectoryPath | FileName;
 export type Ref = Path | IoUrl;
 

@@ -105,7 +105,7 @@ function removeDirectory(dirPath: string): P.Effect.Effect<void, TinyFileSystemE
         // eslint-disable-next-line fp/no-unused-expression
         await fs.promises.rm(dirPath, { recursive: true });
       }
-      return P.Effect.unit;
+      return P.Effect.void;
     },
     catch: toTinyFileSystemError,
   });

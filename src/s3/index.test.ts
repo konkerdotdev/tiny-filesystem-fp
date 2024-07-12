@@ -316,14 +316,14 @@ describe('S3TinyFileSystem', () => {
         if (params.Key.includes('error')) {
           return P.Effect.fail(new Error('GeneralError'));
         }
-        return P.Effect.succeed(P.Effect.unit);
+        return P.Effect.succeed(P.Effect.void);
       });
       s3UploadObjectMock = jest.spyOn(SE, 'UploadObjectEffect');
       s3UploadObjectMock.mockImplementation((params) => {
         if (params.Key.includes('error')) {
           return P.Effect.fail(new Error('GeneralError'));
         }
-        return P.Effect.succeed(P.Effect.unit);
+        return P.Effect.succeed(P.Effect.void);
       });
     });
 
@@ -408,7 +408,7 @@ describe('S3TinyFileSystem', () => {
         if (params.Key.includes('error')) {
           return P.Effect.fail(new Error('GeneralError'));
         }
-        return P.Effect.succeed(P.Effect.unit);
+        return P.Effect.succeed(P.Effect.void);
       });
     });
 
