@@ -3,7 +3,7 @@ import { Readable } from 'node:stream';
 
 import { S3Client } from '@aws-sdk/client-s3';
 import * as S from '@konker.dev/aws-client-effect-s3';
-import { S3FactoryDeps } from '@konker.dev/aws-client-effect-s3';
+import { S3ClientFactoryDeps } from '@konker.dev/aws-client-effect-s3';
 import * as SE from '@konker.dev/aws-client-effect-s3/dist/extra';
 import { toS3Error } from '@konker.dev/aws-client-effect-s3/dist/lib/error';
 import { PromiseDependentWritableStream } from '@konker.dev/aws-client-effect-s3/dist/lib/PromiseDependentWritableStream';
@@ -61,8 +61,8 @@ describe('S3TinyFileSystem', () => {
       P.pipe(
         unit.S3TinyFileSystem({}),
         P.Effect.provideService(
-          S3FactoryDeps,
-          S3FactoryDeps.of({
+          S3ClientFactoryDeps,
+          S3ClientFactoryDeps.of({
             s3ClientFactory: (config) => new S3Client(config),
           })
         )

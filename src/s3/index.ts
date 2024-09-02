@@ -4,7 +4,7 @@ import type { Readable, Writable } from 'node:stream';
 
 import type { S3Client, S3ClientConfig } from '@aws-sdk/client-s3';
 import * as S from '@konker.dev/aws-client-effect-s3';
-import { S3ClientDeps, S3FactoryDeps } from '@konker.dev/aws-client-effect-s3';
+import { S3ClientDeps, S3ClientFactoryDeps } from '@konker.dev/aws-client-effect-s3';
 import { UploadObjectEffect, UploadObjectWriteStreamEffect } from '@konker.dev/aws-client-effect-s3/dist/extra';
 import * as P from '@konker.dev/effect-ts-prelude';
 import path from 'path';
@@ -33,7 +33,6 @@ const getFileReadStream =
           Key: parsed.FullPath,
         })
       ),
-      (x) => x,
       P.Effect.filterOrFail(s3ObjectIsReadable, () =>
         toTinyFileSystemError('[S3TinyFileSystem] getFileReadStream: Body is not a Readable')
       ),
@@ -262,7 +261,6 @@ const removeDirectory =
       // Remove contents of the directory
       dirPath,
       listFiles(s3Client),
-      (x) => x,
       P.Effect.map((dirContent) => dirContent.map((i) => _purgeItem(i))),
       P.Effect.flatMap(P.Effect.all),
 
@@ -328,9 +326,9 @@ function isAbsolute(fileOrDirPath: string): boolean {
   return fileOrDirPath.startsWith(s3Utils.S3_PROTOCOL);
 }
 
-export const S3TinyFileSystem = (config: S3ClientConfig): P.Effect.Effect<TinyFileSystem, never, S3FactoryDeps> =>
+export const S3TinyFileSystem = (config: S3ClientConfig): P.Effect.Effect<TinyFileSystem, never, S3ClientFactoryDeps> =>
   P.pipe(
-    S3FactoryDeps,
+    S3ClientFactoryDeps,
     P.Effect.map((deps) => {
       const s3Client: S3Client = deps.s3ClientFactory(config);
 
