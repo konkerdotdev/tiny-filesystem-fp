@@ -1,6 +1,4 @@
 /* eslint-disable fp/no-let */
-import { describe } from 'node:test';
-
 import * as P from '@konker.dev/effect-ts-prelude';
 
 import { FileType } from '../index';
@@ -58,6 +56,22 @@ describe('S3 URI Utils', () => {
     });
   });
 
+  describe('s3Escape', () => {
+    it('should work as expected', () => {
+      expect(s3UriUtils.s3Escape('folder with space/JPEG image+pl%us.jpeg')).toStrictEqual(
+        'folder+with+space/JPEG+image%2Bpl%25us.jpeg'
+      );
+    });
+  });
+
+  describe('s3Unescape', () => {
+    it('should work as expected', () => {
+      expect(s3UriUtils.s3Unescape('folder+with+space/JPEG+image%2Bpl%25us.jpeg')).toStrictEqual(
+        'folder with space/JPEG image+pl%us.jpeg'
+      );
+    });
+  });
+
   describe('isS3File', () => {
     it('should function correctly', () => {
       expect(s3UriUtils.isS3File('s3://foo/bar')).toBe(false);
@@ -69,6 +83,8 @@ describe('S3 URI Utils', () => {
 
   describe('createS3Url', () => {
     it('should function correctly', () => {
+      expect(s3UriUtils.createS3Url('foobucket', 'qux.csv')).toBe('s3://foobucket/qux.csv');
+      expect(s3UriUtils.createS3Url('foobucket', 'qux+space.csv')).toBe('s3://foobucket/qux%2Bspace.csv');
       expect(s3UriUtils.createS3Url('foobucket', '/bar/baz', 'qux.csv')).toBe('s3://foobucket/bar/baz/qux.csv');
       expect(s3UriUtils.createS3Url('foobucket', '/bar/baz/', 'qux.csv')).toBe('s3://foobucket/bar/baz/qux.csv');
       expect(s3UriUtils.createS3Url('foobucket', '/', 'qux.csv')).toBe('s3://foobucket/qux.csv');
@@ -108,6 +124,24 @@ describe('S3 URI Utils', () => {
           FullPath: 'bar/baz/qux.csv',
         }
       );
+      await expect(
+        P.Effect.runPromise(s3UriUtils.parseS3Url('s3://foobucket/bar/baz/qux+space.csv'))
+      ).resolves.toStrictEqual({
+        Bucket: 'foobucket',
+        Path: 'bar/baz/',
+        File: 'qux space.csv',
+        Type: FileType.File,
+        FullPath: 'bar/baz/qux space.csv',
+      });
+      await expect(
+        P.Effect.runPromise(s3UriUtils.parseS3Url('s3://foobucket/bar/baz/qux%2Bspace.csv'))
+      ).resolves.toStrictEqual({
+        Bucket: 'foobucket',
+        Path: 'bar/baz/',
+        File: 'qux+space.csv',
+        Type: FileType.File,
+        FullPath: 'bar/baz/qux+space.csv',
+      });
       await expect(P.Effect.runPromise(s3UriUtils.parseS3Url('s3://foobucket/bar/baz/'))).resolves.toStrictEqual({
         Bucket: 'foobucket',
         Path: 'bar/baz/',
