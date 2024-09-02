@@ -32,6 +32,22 @@ export function s3UrlDataIsFile(parsed: S3UrlData): parsed is S3UrlDataFile {
 }
 
 /**
+ * Escape an S3 Event URL string
+ * E.g. 'folder with space/JPEG image+pl%25us.jpeg' -> 'folder+with+space/JPEG+image%2Bpl%25us.jpeg'
+ */
+export function s3Escape(s: string): string {
+  return encodeURIComponent(s).replaceAll('%20', '+').replaceAll('%2F', '/');
+}
+
+/**
+ * Unescape an S3 Event URL string
+ * E.g. 'folder+with+space/JPEG+image%2Bpl%25us.jpeg' -> 'folder with space/JPEG image+pl%25us.jpeg'
+ */
+export function s3Unescape(s: string): string {
+  return !!s ? decodeURIComponent(s.replaceAll('+', '%20')) : s;
+}
+
+/**
  * Trim a trailing slash, if present
  *
  * @param s
@@ -48,7 +64,7 @@ export function trimSlash(s: string): string {
  * @param [part]
  */
 export function createS3Url(bucket: string, dirPath?: string, part?: string): S3IoUrl {
-  return `${S3_PROTOCOL}//${path.posix.join(bucket, dirPath || '/', part || '')}` as S3IoUrl;
+  return `${S3_PROTOCOL}//${s3Escape(path.posix.join(bucket, dirPath || '/', part || ''))}` as S3IoUrl;
 }
 
 /**
@@ -92,7 +108,7 @@ export function parseS3Url(s3url: string): P.Effect.Effect<S3UrlData, TinyFileSy
       // eslint-disable-next-line fp/no-mutating-methods
       const lastPart = parts.pop() as string; // even if pathname is an empty string, parts will have one element
       // eslint-disable-next-line fp/no-nil
-      const fileComponent = isS3File(lastPart) ? lastPart : undefined;
+      const fileComponent = isS3File(lastPart) ? s3Unescape(lastPart) : undefined;
       if (!fileComponent) {
         // eslint-disable-next-line fp/no-mutating-methods,fp/no-unused-expression
         parts.push(lastPart);
@@ -100,8 +116,8 @@ export function parseS3Url(s3url: string): P.Effect.Effect<S3UrlData, TinyFileSy
 
       // eslint-disable-next-line fp/no-mutating-methods,fp/no-unused-expression
       if (parts.length > 0 && parts[0] !== SLASH) parts.push(SLASH);
-      const pathComponent = parts.join(path.posix.sep);
-      const fullPathComponent = fileComponent ? path.posix.join(pathComponent, fileComponent) : pathComponent;
+      const pathComponent = s3Unescape(parts.join(path.posix.sep));
+      const fullPathComponent = fileComponent ? path.posix.join(pathComponent!, fileComponent) : pathComponent;
 
       return P.Effect.succeed({
         Bucket: host,
