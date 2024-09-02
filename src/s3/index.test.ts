@@ -518,6 +518,8 @@ describe('S3TinyFileSystem', () => {
       );
       await expect(P.Effect.runPromise(s3TinyFileSystem.joinPath('/foo', 'baz.json'))).resolves.toBe('/foo/baz.json');
       await expect(P.Effect.runPromise(s3TinyFileSystem.joinPath('/', 'baz.json'))).resolves.toBe('/baz.json');
+      await expect(P.Effect.runPromise(s3TinyFileSystem.joinPath('', 'baz.json'))).resolves.toBe('baz.json');
+      await expect(P.Effect.runPromise(s3TinyFileSystem.joinPath('', 'bar', 'baz.json'))).resolves.toBe('bar/baz.json');
       await expect(P.Effect.runPromise(s3TinyFileSystem.joinPath())).resolves.toBe('');
     });
   });

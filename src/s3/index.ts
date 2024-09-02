@@ -284,7 +284,7 @@ const removeDirectory =
 
 // eslint-disable-next-line fp/no-rest-parameters
 function joinPath(...parts: Array<string>): P.Effect.Effect<Ref, TinyFileSystemError> {
-  if (!parts[0]) return P.Effect.succeed('' as Path);
+  if (parts[0] === undefined) return P.Effect.succeed('' as Path);
 
   return parts[0].startsWith(s3Utils.S3_PROTOCOL)
     ? P.pipe(
