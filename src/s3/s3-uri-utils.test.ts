@@ -189,7 +189,7 @@ describe('S3 URI Utils', () => {
       await expect(() => P.Effect.runPromise(s3UriUtils.parseS3Url('s3://'))).rejects.toThrow(
         '[s3-uri-utils] Could not determine bucket name'
       );
-      await expect(() => P.Effect.runPromise(s3UriUtils.parseS3Url(''))).rejects.toThrow('Invalid URL');
+      await expect(() => P.Effect.runPromise(s3UriUtils.parseS3Url(''))).rejects.toThrow('ERR_INVALID_URL');
     });
   });
 });
